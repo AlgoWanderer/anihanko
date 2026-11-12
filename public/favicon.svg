@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- AniHanko logo: a red hanko (name stamp) with an "A", pressed on slightly crooked like a real stamp -->
+  <g transform="rotate(-6 16 16)">
+    <rect x="2.5" y="2.5" width="27" height="27" rx="5" fill="#c2410c"/>
+    <rect x="5.5" y="5.5" width="21" height="21" rx="2.5" fill="none" stroke="#fffdf9" stroke-width="1.6"/>
+    <path d="M10.5 22.5 16 9l5.5 13.5M12.6 17.6h6.8" fill="none" stroke="#fffdf9" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

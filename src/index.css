@@ -1,0 +1,163 @@
+@import 'tailwindcss';
+
+/* Themes are switched by adding a class to <html>: none = light, "dark", or "sea" */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+  Design tokens. Change a color here and it changes everywhere.
+  - paper / surface / line / ink / muted: the neutral "bookshelf" colors
+  - accent: one vermilion red (think hanko stamp), used sparingly
+  Use them in classes like bg-paper, text-ink, border-line, text-accent.
+*/
+:root {
+  --paper: #f5f2ec;
+  --surface: #fffdf9;
+  --line: #e3ddd2;
+  --ink: #1f1b16;
+  --muted: #6f675c;
+  --accent: #c2410c;
+  --accent-soft: #fbe9dd;
+  --on-accent: #ffffff;
+}
+
+.dark {
+  --paper: #15130f;
+  --surface: #1e1b16;
+  --line: #2f2a23;
+  --ink: #ece6dc;
+  --muted: #9a9083;
+  --accent: #f4865a;
+  --accent-soft: #3a2217;
+  --on-accent: #1a0f08;
+}
+
+/*
+  "Sea" theme: light sea-blue paper, deep-ocean ink, and a warm sun-orange accent.
+  The text colors were checked for readable contrast (4.5:1 or better).
+*/
+.sea {
+  --paper: #d9eff4;
+  --surface: #f3fbfc;
+  --line: #b3d9e2;
+  --ink: #0a2f3c;
+  --muted: #3f6672;
+  --accent: #a34a06;
+  --accent-soft: #fdecc8;
+  --on-accent: #ffffff;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+}
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque', 'Inter', ui-sans-serif, sans-serif;
+}
+
+body {
+  @apply bg-paper font-sans text-ink antialiased;
+}
+
+/* Shared look for dropdowns and text inputs */
+@utility field {
+  @apply rounded-md border border-line bg-surface px-3 py-2 text-sm text-ink outline-none focus:border-accent;
+}
+
+/*
+  Sun rays in the Sea theme: warm yellow beams fanning out from the top-right corner,
+  turning very slowly. They sit behind the page (see .sun-layer in Layout.tsx)
+  and are hidden in the other themes.
+*/
+.sun-layer {
+  display: none;
+}
+.sea .sun-layer {
+  display: block;
+}
+.sun-rays {
+  position: absolute;
+  top: 4rem; /* the bottom edge of the navbar, so the rays come out from under it */
+  right: 0;
+  width: 60rem;
+  height: 60rem;
+  transform: translate(50%, -50%);
+  border-radius: 50%;
+  /*
+    24 wedges of golden light. The yellow leans slightly orange on purpose:
+    pure yellow mixed with the blue background looks greenish.
+  */
+  background: repeating-conic-gradient(rgb(255 200 87 / 0.5) 0deg 5deg, transparent 5deg 15deg);
+  /* strongest near the corner, fading away as the rays spread out */
+  mask-image: radial-gradient(circle, #000 5%, rgb(0 0 0 / 0.6) 30%, transparent 68%);
+  animation: sun-turn 180s linear infinite;
+}
+@keyframes sun-turn {
+  to {
+    transform: translate(50%, -50%) rotate(360deg);
+  }
+}
+/* Smaller on phones */
+@media (max-width: 640px) {
+  .sun-rays {
+    width: 36rem;
+    height: 36rem;
+  }
+}
+/* People who turn off animations in their device settings get still rays. */
+@media (prefers-reduced-motion: reduce) {
+  .sun-rays {
+    animation: none;
+  }
+}
+
+/*
+  Hanko stamp (components/HankoStamp.tsx). Always a little crooked, like a real stamp.
+  .hanko-stamp-press = the moment you stamp: it drops onto the poster and settles.
+*/
+.hanko-stamp {
+  transform: rotate(-12deg);
+}
+.hanko-stamp-press {
+  animation: hanko-press 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+@keyframes hanko-press {
+  0% {
+    opacity: 0;
+    transform: scale(2.4) rotate(-22deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(0.9) rotate(-10deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(-12deg);
+  }
+}
+/* The poster gives a little "thud" when the stamp lands */
+.hanko-thud {
+  animation: hanko-thud 0.3s ease-out 0.25s;
+}
+@keyframes hanko-thud {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(3px) scale(0.99);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hanko-stamp-press,
+  .hanko-thud {
+    animation: none;
+  }
+}
